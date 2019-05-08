@@ -1,0 +1,113 @@
+---
+title: "Exercise Sheet 3"
+fontsize: 11pt
+header-includes: \usepackage[german]{babel}
+output:
+  html_document: default
+  pdf_document:
+    highlight: tango
+fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, # -> Sollen Code Chunks im gerenderten Dokument angezeigt werden?
+                      eval = TRUE, # -> Sollen R Code Chunks ausgefÃ¼hrt werden?
+                      warning = FALSE, # -> Warnungen sollten nur am Ende zum Rendern auf FALSE gesetzt werden
+                      message = FALSE) # -> Hinweise sollten nur am Ende zum Rendern auf FALSE gesetzt werden
+```
+1. The following two-dimensional data set is given. Perform a $K$-means Clustering with $K=3$ using the Euclidean distance. Use the first three points as initial centroids. For each algorithm iteration, specify the distances between centroids and all points and calculate the changed centroids after each reassignment of the points. 
+
+<nbsp;>   | p1 | p2 | p3 | p4 | p5 | p6 | p7 | p8| p9 | p10 | p11 | p12
+--------- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | --  | -- 
+x         | 2.0| 2.0| 2.0| 2.5| 2.5| 3.0| 4.0| 4.0| 4.5| 4.5| 4.5 | 4.5
+y         | 1.0| 1.5| 2.0| 1.0| 2.0| 4.0| 1.0| 2.5| 1.0| 1.5| 2.5 | 3.0
+
+```{r}
+# dat <- tibble(
+#   x = c(2.0, 2.0, 2.0, 2.5, 2.5, 3.0, 4.0, 4.0, 4.5, 4.5, 4.5 , 4.5),
+#   y = c(1.0, 1.5, 2.0, 1.0, 2.0, 4.0, 1.0, 2.5, 1.0, 1.5, 2.5 , 3.0)
+# )
+
+# Solution of task 1...
+dat <- tibble(
+     x = c(2.0, 2.0, 2.0, 2.5, 2.5, 3.0, 4.0, 4.0, 4.5, 4.5, 4.5 , 4.5),
+     y = c(1.0, 1.5, 2.0, 1.0, 2.0, 4.0, 1.0, 2.5, 1.0, 1.5, 2.5 , 3.0)
+   )
+c1<- dat[1,]  
+c2<- dat[2,]
+c3<- dat[3,]
+
+result<-kmeans(dat, rbind(c1,c2,c3))
+plot(dat,col=result$cluster)
+2. A school would like to group its pupils according to their performance at two intermediate examinations. It is assumed that there are at least 2 clusters of pupils. Load the file `clustering-student-mat.csv`. The file contains for each of the two exams the number of points scored for a total of 395 students.  
+Perform a $K$-means-Clustering for each $k\in \{2,3,\ldots,8\}$. Display the cluster assignments of the points in a scatter plot. 
+
+pkgs <- c("factoextra",  "NbClust")
+install.packages(pkgs)
+library(factoextra)
+library(NbClust)
+library(dplyr)
+library(cluster)
+student<- read.csv("C:/Users/bahubali/Documents/2nd semester/Visual Analytics/Assignments/clustering.csv")
+summary(student)
+#K-means with K=2
+cluster1<-kmeans(student,centers = 2)
+student$cluster<-as.factor(cluster1$cluster)
+plot(student,col=cluster1$cluster)
+points(cluster1$centers, col = 1:2, pch = 8, cex=2)
+#K-means with K=3
+cluster2<-kmeans(student,centers = 3)
+student$cluster1<-as.factor(cluster2$cluster)
+plot(student,col=cluster2$cluster)
+points(cluster2$centers, col = 1:2, pch = 8, cex=2)
+#K-means with K=4
+cluster3<-kmeans(student,centers = 4)
+student$cluster2<-as.factor(cluster3$cluster)
+plot(student,col=cluster3$cluster)
+points(cluster3$centers, col = 1:2, pch = 8, cex=2)
+#K-means with K=5
+cluster4<-kmeans(student,centers = 5)
+student$cluster3<-as.factor(cluster4$cluster)
+plot(student,col=cluster4$cluster)
+points(cluster4$centers, col = 1:2, pch = 8, cex=2)
+#K-means with K=6
+cluster5<-kmeans(student,centers = 6)
+student$cluster4<-as.factor(cluster5$cluster)
+plot(student,col=cluster5$cluster)
+points(cluster5$centers, col = 1:2, pch = 8, cex=2)
+#K-means with K=7
+cluster6<-kmeans(student,centers = 7)
+student$cluster5<-as.factor(cluster6$cluster)
+plot(student,col=cluster6$cluster)
+points(cluster6$centers, col = 1:2, pch = 8, cex=2)
+#K-means with K=8
+cluster7<-kmeans(student,centers = 8)
+student$cluster6<-as.factor(cluster7$cluster)
+plot(student,col=cluster7$cluster)
+points(cluster7$centers, col = 1:2, pch = 8, cex=2)
+
+
+3. For the clustering in task 2, use the silhouette coefficient to find the optimal value for the number of clusters $K$. Evaluate the result for the representativeness of the centroids with respect to their cluster.
+
+# Silhouette method
+fviz_nbclust(student, kmeans, method = "silhouette")+
+  labs(subtitle = "Silhouette method")
+The optimal number of clusters K=3.
+
+# Hierarchical Clustering
+dm <- tribble(~p1,~p2,~p3,~p4,~p5,
+              0.00, 0.02, 0.90, 0.36, 0.53,
+              0.02, 0.00, 0.65, 0.15, 0.24,
+              0.90, 0.65, 0.00, 0.59, 0.45,
+              0.36, 0.15, 0.59, 0.00, 0.56,
+              0.53, 0.24, 0.45, 0.56, 0.00) %>% as.matrix()
+rownames(dm) <- letters[1:5]
+colnames(dm) <- letters[1:5]
+dm
+dist_mat <- dist(dm, method = 'euclidean')
+# Single Linkage
+hclust_single <- hclust(dist_mat, method = 'single')
+plot(hclust_single)
+# Complete Linkage
+hclust_complete <- hclust(dist_mat, method = 'complete')
+plot(hclust_complete)
