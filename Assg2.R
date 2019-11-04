@@ -6,45 +6,27 @@ library(dplyr)
 library(cluster)
 student<- read.csv("C:/Users/bahubali/Documents/2nd semester/Visual Analytics/Assignments/clustering.csv")
 summary(student)
-#K-means with K=2
-cluster1<-kmeans(student,centers = 2)
-student$cluster<-as.factor(cluster1$cluster)
-plot(student,col=cluster1$cluster)
-points(cluster1$centers, col = 1:2, pch = 8, cex=2)
-#K-means with K=3
-cluster2<-kmeans(student,centers = 3)
-student$cluster1<-as.factor(cluster2$cluster)
-plot(student,col=cluster2$cluster)
-points(cluster2$centers, col = 1:2, pch = 8, cex=2)
-#K-means with K=4
-cluster3<-kmeans(student,centers = 4)
-student$cluster2<-as.factor(cluster3$cluster)
-plot(student,col=cluster3$cluster)
-points(cluster3$centers, col = 1:2, pch = 8, cex=2)
-#K-means with K=5
-cluster4<-kmeans(student,centers = 5)
-student$cluster3<-as.factor(cluster4$cluster)
-plot(student,col=cluster4$cluster)
-points(cluster4$centers, col = 1:2, pch = 8, cex=2)
-#K-means with K=6
-cluster5<-kmeans(student,centers = 6)
-student$cluster4<-as.factor(cluster5$cluster)
-plot(student,col=cluster5$cluster)
-points(cluster5$centers, col = 1:2, pch = 8, cex=2)
-#K-means with K=7
-cluster6<-kmeans(student,centers = 7)
-student$cluster5<-as.factor(cluster6$cluster)
-plot(student,col=cluster6$cluster)
-points(cluster6$centers, col = 1:2, pch = 8, cex=2)
-#K-means with K=8
-cluster7<-kmeans(student,centers = 8)
-student$cluster6<-as.factor(cluster7$cluster)
-plot(student,col=cluster7$cluster)
-points(cluster7$centers, col = 1:2, pch = 8, cex=2)
+
+c1<- matrix(0,nrow=nrow(data),ncol=7)
+for (n in c(2:8)) {
+  c1[,n-1]<-kmeans(student,n)[1]$cluster
+  c1
+}
+oldpar<- par(mfrow=c(3,3))
+for(n1 in c(1:7)){
+  plot(student, main= n1+1, col=c1[,n1])
+}
+
 
 # Silhouette method
-fviz_nbclust(student, kmeans, method = "silhouette")+
-  labs(subtitle = "Silhouette method")
+sil<-vector(mode = "list",length = 7)
+for(s in c(2:8)){
+  sil[s-1]<-mean(silhouette(pam(student,s))[,3])
+}
+plot(c(2:8),sil,type="l",lwd=3)
+lines(c(2:8),sil,type="p",cex=2,col=c("blue","red","blue","blue","blue","blue"), pch = 19)
+# fviz_nbclust(student, kmeans, k.max=8, method = "silhouette")+
+#   labs(subtitle = "Silhouette method")
 
 # Hierachical Clustering
 
@@ -60,10 +42,10 @@ dm
 dist_mat <- dist(dm, method = 'euclidean')
 # Single Linkage
 hclust_single <- hclust(dist_mat, method = 'single')
-plot(hclust_single)
+plot(hclust_single,hang =-1,main = "Single Linkage" )
 # Complete Linkage
 hclust_complete <- hclust(dist_mat, method = 'complete')
-plot(hclust_complete)
+plot(hclust_complete,hang =-1,main="Complete Linkage")
 
 #k-means for given set of points
 dat <- tibble(

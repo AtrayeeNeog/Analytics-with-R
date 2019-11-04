@@ -1,0 +1,155 @@
+---
+title: "Excersice Sheet 7"
+fontsize: 11pt
+header-includes:
+- \usepackage[german]{babel}
+- \usepackage{caption}
+output:
+  pdf_document: default
+  html_document: default
+highlight: tango
+fig_caption: yes
+---
+
+\captionsetup[table]{labelformat=empty}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+A broker wants to use linear regression to find out which factors have a large influence on the price of a property. For this purpose, the variables described in Table 1 are given for the last 88 sales in the broker's region.
+
+Table: Table 1 House price record
+
+Variabel   | Description
+---------  | -------------
+`price`    | house price ($\times$ 1,000 EUR)
+`bdrms`    | number bedrooms
+`lotsize`  | parking area (m$^2$)
+`sqrm`     | house area (m$^2$)
+`country`  | $==1$ when in country house style
+`lprice`   | `log(price)`
+`llotsize` | `log(lotsize)`
+`lsqrm`    | `log(sqrm)`
+
+1.  Create a linear regression model with `price` as dependent variable and `bdrms`, `lotsize`, `sqrm` und `country`  as independent variables. 
+    a) Determine the regression coefficients and  $p$-values of the dependent variable and compare their influence within the model on the predicted value for  `price`. 
+    b) Determine how much variance of the dependent variable is explained. 
+    c) Check the residuals (graphically) for normal distribution and homoskedasticity.
+    
+```{r}
+# Solution for Task 1...
+
+library(readr)
+library(stringr)
+library(dplyr)
+#a
+housePrice <- read_csv(str_c(dirname(getwd()), "/Data/hprice.csv"))
+
+
+multipleLinearR <- lm(price ~ bdrms+country+lotsize+sqrm, data= housePrice )
+multipleLinearR
+
+
+coefficients(multipleLinearR) # model coefficients
+anova(multipleLinearR) # anova table
+#b
+
+summary(multipleLinearR)
+#Answer: 66% of the variance can be explained by the model
+
+#c
+#fitted value = predicted value
+plot(multipleLinearR)
+
+#Answer 1: Normal distriution with some outliers on the edges (See QQ-Plot)
+#Answer 2: Hetero.... not homo.....
+#Residuals vs Fitted: Nr 42 -> Actual price: 713.500, predicted price according to model: 520.000, residual: around 200.000
+```
+
+2. Given be the linear regression model from task 1.
+    a) Create a scatterplot to display the relationship between the predicted value for `price` and the residual size.
+    b) For some houses, the price forecast of the broker model is more than EUR 100,000 off. Highlight houses with a residual size of more than 100 or less than 100. What could be the reasons for high model inaccuracies?
+    c) Can the $R^2$-value be increased by using a linear transformation of one of the independent variables?
+
+```{r}
+# Solution for Task 2...
+
+#a
+plot(multipleLinearR)
+residuals(multipleLinearR)
+#Answer 1: Normal distriution with some outliers on the edges (See QQ-Plot)
+#Answer 2: Hetero.... not homo.....
+#Residuals vs Fitted: Nr 42 -> Actual price: 713.500, predicted price according to model: 520.000, residual: around 200.000
+
+#b
+residuals<-data.frame(residuals(multipleLinearR))
+residuals
+
+fitted <- data.frame(fitted(multipleLinearR))
+data <- data.frame(fitted, residuals)
+
+res_filter <- rbind(filter(data, data$residuals.multipleLinearR. < -100), filter(data, data$residuals.multipleLinearR. >100))
+
+plot(x=data$fitted.multipleLinearR., y=data$residuals.multipleLinearR.) +
+points(x=res_filter$fitted.multipleLinearR., y=res_filter$residuals.multipleLinearR., col = "red", pch=10)
+#What could be the reasons for high model inaccuracies? Maybe the assumption of linearity is not always valid for house prices, as the hetero... showed. -> Not all variables increase linearly
+
+#c
+#Can the $R^2$-value be increased by using a linear transformation of one of the independent variables?
+
+summary(multipleLinearR)
+
+#Multiple R-squared:  0.6758,	Adjusted R-squared:  0.6602 
+
+housePrice$sqrtbed <- sqrt(housePrice$bdrms)
+
+pricebed <- lm(price ~ bdrms, housePrice)
+plot(x=housePrice$bdrms, y=housePrice$price)+
+abline(pricebed, col='red')
+
+pricesqrtbed <- lm(price ~ sqrtbed, housePrice)
+plot(x=housePrice$sqrtbed, y=housePrice$price)+
+abline(pricesqrtbed, col='red')
+
+summary(pricebed) 
+summary(multipleLinearR)
+summary(pricesqrtbed)
+
+# Solution for Task 3...
+#Graphically display the relationship between `bdrms` and `price`. Check whether this relationship is also reflected in the regression model from Task 1. Create a regression model with `bdrms` as the only independent variable. Compare the regression coefficients with those of the model from Task 1 and interpret the differences. 
+
+housePrice$sqrtbed <- sqrt(housePrice$bdrms)
+
+pricebed <- lm(price ~ bdrms, housePrice)
+plot(x=housePrice$bdrms, y=housePrice$price)+
+abline(pricebed, col='red')
+
+pricesqrtbed <- lm(price ~ sqrtbed, housePrice)
+plot(x=housePrice$sqrtbed, y=housePrice$price)+
+abline(pricesqrtbed, col='red')
+
+coefficients(pricebed) 
+coefficients(multipleLinearR) 
+coefficients(pricesqrtbed)
+summary(pricebed) 
+summary(multipleLinearR)
+summary(pricesqrtbed)
+```
+
+3. Graphically display the relationship between `bdrms` and `price`. Check whether this relationship is also reflected in the regression model from Task 1. Create a regression model with `bdrms` as the only independent variable. Compare the regression coefficients with those of the model from Task 1 and interpret the differences. 
+
+```{r}
+# Solution for Task 3...
+
+plot(x=housePrice$bdrms, y=housePrice$price)
+plot(x=housePrice$sqrtbed, y=housePrice$price)
+```
+------
+Dataset:
+
+- http://isgwww.cs.uni-magdeburg.de/cv/lehre/VisAnalytics/material/exercise/datasets/hprice.csv

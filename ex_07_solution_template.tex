@@ -1,0 +1,505 @@
+\documentclass[11pt,]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Excersice Sheet 7},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Excersice Sheet 7}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+\usepackage[german]{babel}
+\usepackage{caption}
+
+\begin{document}
+\maketitle
+
+\captionsetup[table]{labelformat=empty}
+
+A broker wants to use linear regression to find out which factors have a
+large influence on the price of a property. For this purpose, the
+variables described in Table 1 are given for the last 88 sales in the
+broker's region.
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Table 1 House price record}\tabularnewline
+\toprule
+Variabel & Description\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+Variabel & Description\tabularnewline
+\midrule
+\endhead
+\texttt{price} & house price (\(\times\) 1,000 EUR)\tabularnewline
+\texttt{bdrms} & number bedrooms\tabularnewline
+\texttt{lotsize} & parking area (m\(^2\))\tabularnewline
+\texttt{sqrm} & house area (m\(^2\))\tabularnewline
+\texttt{country} & \(==1\) when in country house style\tabularnewline
+\texttt{lprice} & \texttt{log(price)}\tabularnewline
+\texttt{llotsize} & \texttt{log(lotsize)}\tabularnewline
+\texttt{lsqrm} & \texttt{log(sqrm)}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create a linear regression model with \texttt{price} as dependent
+  variable and \texttt{bdrms}, \texttt{lotsize}, \texttt{sqrm} und
+  \texttt{country} as independent variables.
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii})}
+  \tightlist
+  \item
+    Determine the regression coefficients and \(p\)-values of the
+    dependent variable and compare their influence within the model on
+    the predicted value for \texttt{price}.
+  \item
+    Determine how much variance of the dependent variable is explained.
+  \item
+    Check the residuals (graphically) for normal distribution and
+    homoskedasticity.
+  \end{enumerate}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Solution for Task 1...}
+\NormalTok{height<-}\KeywordTok{read.csv}\NormalTok{(}\StringTok{"C:/Users/atray/OneDrive/Documents/R/hprice.csv"}\NormalTok{)}
+\NormalTok{lmprice<-}\StringTok{ }\KeywordTok{lm}\NormalTok{(price}\OperatorTok{~}\NormalTok{bdrms}\OperatorTok{+}\NormalTok{lotsize}\OperatorTok{+}\NormalTok{sqrm}\OperatorTok{+}\NormalTok{country, }\DataTypeTok{data =}\NormalTok{ height )}
+\KeywordTok{summary}\NormalTok{(lmprice)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ bdrms + lotsize + sqrm + country, data = height)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -122.268  -38.271   -6.545   28.210  218.040 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -24.126528  29.603455  -0.815  0.41741    
+## bdrms        11.004292   9.515260   1.156  0.25080    
+## lotsize       0.022345   0.006918   3.230  0.00177 ** 
+## sqrm          1.337325   0.143577   9.314 1.53e-14 ***
+## country      13.715542  14.637265   0.937  0.35146    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 59.88 on 83 degrees of freedom
+## Multiple R-squared:  0.6758, Adjusted R-squared:  0.6602 
+## F-statistic: 43.25 on 4 and 83 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(height, }\DataTypeTok{pch=}\DecValTok{16}\NormalTok{, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(lmprice)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(}\KeywordTok{residuals}\NormalTok{(lmprice))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-1-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(}\KeywordTok{residuals}\NormalTok{(lmprice))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-1-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#par(mfrow=c(2,2))}
+\KeywordTok{plot}\NormalTok{(lmprice)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-1-4.pdf}
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-1-5.pdf}
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-1-6.pdf}
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-1-7.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Given be the linear regression model from task 1.
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii})}
+  \tightlist
+  \item
+    Create a scatterplot to display the relationship between the
+    predicted value for \texttt{price} and the residual size.
+  \item
+    For some houses, the price forecast of the broker model is more than
+    EUR 100,000 off. Highlight houses with a residual size of more than
+    100 or less than 100. What could be the reasons for high model
+    inaccuracies?
+  \item
+    Can the \(R^2\)-value be increased by using a linear transformation
+    of one of the independent variables?
+  \end{enumerate}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Solution for Task 2...}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(stringr)}
+\KeywordTok{plot}\NormalTok{(height}\OperatorTok{$}\NormalTok{price,lmprice}\OperatorTok{$}\NormalTok{residuals,}\DataTypeTok{pch=}\DecValTok{16}\NormalTok{, }\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{residuals<-}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{residuals}\NormalTok{(lmprice))}
+\NormalTok{fitted <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{fitted}\NormalTok{(lmprice))}
+\NormalTok{data <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(fitted, residuals)}
+
+\NormalTok{outliers <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(}\KeywordTok{filter}\NormalTok{(data, data}\OperatorTok{$}\NormalTok{residuals.lmprice. }\OperatorTok{<}\StringTok{ }\DecValTok{-100}\NormalTok{), }\KeywordTok{filter}\NormalTok{(data, data}\OperatorTok{$}\NormalTok{residuals.lmprice. }\OperatorTok{>}\DecValTok{100}\NormalTok{))}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\NormalTok{data}\OperatorTok{$}\NormalTok{fitted.lmprice., }\DataTypeTok{y=}\NormalTok{data}\OperatorTok{$}\NormalTok{residuals.lmprice.) }\OperatorTok{+}
+\KeywordTok{points}\NormalTok{(}\DataTypeTok{x=}\NormalTok{outliers}\OperatorTok{$}\NormalTok{fitted.lmprice, }\DataTypeTok{y=}\NormalTok{outliers}\OperatorTok{$}\NormalTok{residuals.lmprice, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{pch=}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-2-2.pdf}
+
+\begin{verbatim}
+## integer(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{height}\OperatorTok{$}\NormalTok{sqrtbed <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(height}\OperatorTok{$}\NormalTok{bdrms)}
+
+\NormalTok{pricebed <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(price }\OperatorTok{~}\StringTok{ }\NormalTok{bdrms, height)}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\NormalTok{height}\OperatorTok{$}\NormalTok{bdrms, }\DataTypeTok{y=}\NormalTok{height}\OperatorTok{$}\NormalTok{price)}\OperatorTok{+}
+\KeywordTok{abline}\NormalTok{(pricebed, }\DataTypeTok{col=}\StringTok{'red'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-2-3.pdf}
+
+\begin{verbatim}
+## integer(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pricesqrtbed <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(price }\OperatorTok{~}\StringTok{ }\NormalTok{sqrtbed, height)}
+\KeywordTok{plot}\NormalTok{(}\DataTypeTok{x=}\NormalTok{height}\OperatorTok{$}\NormalTok{sqrtbed, }\DataTypeTok{y=}\NormalTok{height}\OperatorTok{$}\NormalTok{price)}\OperatorTok{+}
+\KeywordTok{abline}\NormalTok{(pricesqrtbed, }\DataTypeTok{col=}\StringTok{'red'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-2-4.pdf}
+
+\begin{verbatim}
+## integer(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{coefficients}\NormalTok{(pricebed) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)       bdrms 
+##    72.23111    62.02456
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{coefficients}\NormalTok{(lmprice) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  (Intercept)        bdrms      lotsize         sqrm      country 
+## -24.12652827  11.00429220   0.02234481   1.33732481  13.71554214
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{coefficients}\NormalTok{(pricesqrtbed)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)     sqrtbed 
+##   -146.3001    234.3705
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(pricebed) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ bdrms, data = height)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -209.33  -52.81   -7.83   32.20  342.65 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)    72.23      41.55   1.738   0.0857 .  
+## bdrms          62.02      11.34   5.470 4.34e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 88.98 on 86 degrees of freedom
+## Multiple R-squared:  0.2581, Adjusted R-squared:  0.2495 
+## F-statistic: 29.93 on 1 and 86 DF,  p-value: 4.344e-07
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(lmprice)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ bdrms + lotsize + sqrm + country, data = height)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -122.268  -38.271   -6.545   28.210  218.040 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -24.126528  29.603455  -0.815  0.41741    
+## bdrms        11.004292   9.515260   1.156  0.25080    
+## lotsize       0.022345   0.006918   3.230  0.00177 ** 
+## sqrm          1.337325   0.143577   9.314 1.53e-14 ***
+## country      13.715542  14.637265   0.937  0.35146    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 59.88 on 83 degrees of freedom
+## Multiple R-squared:  0.6758, Adjusted R-squared:  0.6602 
+## F-statistic: 43.25 on 4 and 83 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(pricesqrtbed)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ sqrtbed, data = height)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -211.44  -54.34   -8.04   35.91  347.23 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  -146.30      84.27  -1.736   0.0861 .  
+## sqrtbed       234.37      44.61   5.253 1.07e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 89.89 on 86 degrees of freedom
+## Multiple R-squared:  0.2429, Adjusted R-squared:  0.2341 
+## F-statistic:  27.6 on 1 and 86 DF,  p-value: 1.069e-06
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Graphically display the relationship between \texttt{bdrms} and
+  \texttt{price}. Check whether this relationship is also reflected in
+  the regression model from Task 1. Create a regression model with
+  \texttt{bdrms} as the only independent variable. Compare the
+  regression coefficients with those of the model from Task 1 and
+  interpret the differences.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Solution for Task 3...}
+\NormalTok{x1<-}\StringTok{ }\NormalTok{height}\OperatorTok{$}\NormalTok{bdrms}
+\NormalTok{y1<-}\StringTok{ }\NormalTok{height}\OperatorTok{$}\NormalTok{price}
+\KeywordTok{plot}\NormalTok{(x1, y1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{ex_07_solution_template_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmbdrms<-}\KeywordTok{lm}\NormalTok{(price}\OperatorTok{~}\NormalTok{bdrms, }\DataTypeTok{data =}\NormalTok{ height)}
+\KeywordTok{summary}\NormalTok{(lmbdrms)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = price ~ bdrms, data = height)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -209.33  -52.81   -7.83   32.20  342.65 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)    72.23      41.55   1.738   0.0857 .  
+## bdrms          62.02      11.34   5.470 4.34e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 88.98 on 86 degrees of freedom
+## Multiple R-squared:  0.2581, Adjusted R-squared:  0.2495 
+## F-statistic: 29.93 on 1 and 86 DF,  p-value: 4.344e-07
+\end{verbatim}
+
+
+\end{document}

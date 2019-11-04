@@ -1,0 +1,239 @@
+---
+title: "Excersice Sheet 6"
+fontsize: 11pt
+header-includes: \usepackage[german]{babel}
+output:
+  html_document: default
+  pdf_document:
+    highlight: haddock
+fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+_What factors explain excessive alcohol consumption among students?_ The record for the task sheet comes from a survey of students who attended mathematics and Portuguese courses and contains many interesting details about their sociodemographics, life circumstances and learning success.  
+The ordinal scaled variables `Dalc` and `Walc` give information about the alcohol consumption of the students on weekdays and weekends. Create a binary target variable `alc_prob` as follows:
+
+```{r, echo=T, eval=T}
+library(stringr)
+library(readr)
+library(dplyr)
+library(reldist)
+# (Adapt Path)
+ student <- read.csv("C:/Users/atray/OneDrive/Documents/R/studentalc.csv")
+ student <- student %>%
+   mutate(alc_prob = ifelse(Dalc + Walc >= 6, "alc_p", "no_alc_p"))
+summary(student) 
+```
+
+1. Calculate the Gini index for the target variable `alc_prob` and the _Gini index_ for each variable with respect to `alc_prob`. Determine the 5 variables with the highest _Gini Gain_.
+
+```{r}
+# Solution for Task 1
+library(ineq)
+# Gini index for target variable `alc_prob`:
+alc_prob <- prop.table(table(student$alc_prob))
+no_alc_prob <-alc_prob[2]
+alc_prob <- alc_prob[1]
+
+no_alc_prob
+alc_prob
+
+binaryGiniFunction <- function(dataset, binaryValue1, binaryValue2)
+{
+  quadr_binaryValue1 <- binaryValue1^2
+  quadr_binaryValue2  <- binaryValue2^2
+  
+  return(1-sum(quadr_binaryValue1,quadr_binaryValue2))
+  
+}
+
+target <- binaryGiniFunction(student, no_alc_prob, alc_prob)
+
+Gini_frame <- data.frame()
+
+prop.table(table(student$alc_prob, student$sex))
+#each variable with respect to alc_prob
+
+alc_prob <- prop.table(table(student$alc_prob))
+
+#deserialize coloumns 
+
+student$age <- cut(student$age, 
+                       breaks = c(-Inf, 21, Inf), 
+                       labels = c("15-20","21-22+"), 
+                       right = FALSE)
+
+student$Medu <- cut(student$Medu, 
+                       breaks = c(-Inf, 3, Inf), 
+                       labels = c("none-5th to 9th grade", "secondary   education-higher+"), 
+                       right = FALSE)
+
+student$Fedu <- cut(student$Fedu, 
+                       breaks = c(-Inf, 3, Inf), 
+                       labels = c("none-5th to 9th grade", "secondary   education-higher+"), 
+                       right = FALSE)
+
+student$traveltime <- cut(student$traveltime,
+                          breaks = c(-Inf, 2, 3, Inf),
+                          labels = c("< 15min", "15 to 30min", "30min to 1h+"),
+                          right = FALSE)
+
+student$studytime <- cut(student$studytime,
+                         breaks = c(-Inf, 2,3, Inf),
+                         labels = c("<2 hours", "to 5 hours", "to 10hours +"),
+                         right=FALSE)
+
+student$failures <- cut(student$failures,
+                        breaks = c(-Inf, 2,4,Inf),
+                        labels = c("One", "2 or 3", "4 or more"),
+                        right = FALSE)
+
+student$famrel <- cut(student$famrel,
+                      breaks = c(-Inf,2,4,Inf),
+                      labels = c("Bad", "Good", "Excellent"),
+                      right = FALSE)
+student$freetime <- cut(student$freetime,
+                        breaks = c(-Inf, 2, 4, Inf),
+                        labels = c("Very Low", "Sufficient", "Very High"),
+                        right = FALSE)
+
+student$goout <- cut(student$goout,
+                     breaks = c(-Inf,2,4,Inf),
+                     labels = c("Never", "Sometimes", "Very often"),
+                     right = FALSE)
+
+student$health <- cut(student$health,
+                     breaks = c(-Inf,2,4,Inf),
+                     labels = c("Very Bad", "Good", "Excellent"),
+                     right = FALSE)                      
+
+student$absences <- cut(student$absences,
+                     breaks = c(-Inf,32,63,Inf),
+                     labels = c("occasionally", "with increased regularity ", "often"),
+                     right = FALSE)  
+
+student$G1 <- cut(student$G1,
+                     breaks = c(-Inf,5,14,Inf),
+                     labels = c("very good", "good", "bad"),
+                     right = FALSE)  
+student$G2 <- cut(student$G2,
+                     breaks = c(-Inf,5,14,Inf),
+                     labels = c("very good", "good", "bad"),
+                     right = FALSE) 
+
+student$G3 <- cut(student$G3,
+                     breaks = c(-Inf,5,14,Inf),
+                     labels = c("very good", "good", "bad"),
+right = FALSE)
+
+
+for(i in c(1:31)){
+  prob_node  <- prop.table(table(student[[i]]))
+  prob <- prop.table(table(student[[i]], student$alc_prob))
+  lenght_vec <- length(prob)/2
+  Gini_i <- 1-sum(prob^2)
+  
+  for(j in 1:lenght_vec){
+    Gini_weightedGiniSv <- 1-sum(((1/sum(prob[j,]))*(prob[j,]))^2)
+    Gini_Gain <- Gini_i -(prob_node[j]*Gini_weightedGiniSv)
+  }
+  
+  Gini_frame<- rbind(Gini_frame, Gini_Gain)
+  Gini_frame
+}
+
+columns <- names(student)
+Gini_frame$name  <-(columns[1:31])
+names(Gini_frame)<- c("GiniGain", "Dimension")
+print(Gini_frame)
+
+Gini_frame[order(-Gini_frame$GiniGain),]
+```
+
+2. Learn 2 different decision trees with `alc_prob` as target variable. For the first tree, nodes should be further partitioned until the class distribution of all resulting leaf nodes is pure. For the second tree, nodes with a cardinality of less than 20 instances should not be further partitioned. Determine the quality of the trees by calculating sensitivity (_True Positive Rate_) and specificity (_True Negative Rate_) for a 70%:30% split in training and test sets. Display the decision trees graphically and discuss the differences in quality measures
+
+```{r}
+# Solution for Task 2
+
+#label class:
+student$alc_probf<-factor(student$alc_prob)
+str(student)
+#Partitioning the data:
+set.seed(123)
+pd<-sample(2, nrow(student),replace = TRUE, prob = c(0.7,0.3))
+
+train<-student[pd==1,]
+test<-student[pd==2,]
+
+#Decision tree:
+library(rpart)
+library(party)
+library(rpart.plot)
+library(caret)
+tree1<- ctree(alc_probf~sex+age+famsize+higher+Pstatus+Medu+Fedu+Mjob+Fjob+reason+guardian+traveltime+studytime+failures+schoolsup+famsup+paid+activities+nursery+internet+romantic+famrel+freetime+goout+health+absences+G1+G2+G3, data=train, controls = ctree_control(minsplit = 0))
+tree1
+rpart.plot(tree1)
+
+
+tree2<-rpart(alc_probf~sex+age+famsize+higher+Pstatus+Medu+Fedu+Mjob+Fjob+reason+guardian+traveltime+studytime+failures+schoolsup+famsup+paid+activities+nursery+internet+romantic+famrel+freetime+goout+health+absences+G1+G2+G3,data=train, minsplit = 20L)
+tree2
+plot(tree2)
+
+#predict
+predict(tree1, test)
+
+#Misclassification in training data:
+tab1<- table(predict(tree1), train$alc_probf)
+print(tab1)
+
+tab2<- table(predict(tree2), train$alc_probf)
+print(tab2)
+
+spec1<-specificity(predict(tree1), train$alc_probf)
+spec1
+sens1<-sensitivity(predict(tree1), train$alc_probf)
+sens1
+spec2<-specificity(predict(tree2), train$alc_probf)
+sens2<-sensitivity(predict(tree2), train$alc_probf)
+```
+
+3. Use `randomForest::randomForest()` to create a random forest with 200 trees. As candidates for a split within a tree a random sample of 5 variables should be drawn. Calculate Accuracy, Sensitivity and Specificity for the Out-of-the-Bag instances and show the most important variables (`?importance`).
+
+```{r}
+# Solution for Task 3
+
+library(randomForest)
+#Whole data:
+rf_data<-randomForest(formula= alc_probf~sex+age+famsize+higher+Pstatus+Medu+Fedu+Mjob+Fjob+reason+guardian+traveltime+studytime+failures+schoolsup+famsup+paid+activities+nursery+internet+romantic+famrel+freetime+goout+health+absences+G1+G2+G3, data=student, ntree=200, mtry=5)
+print(rf_data)
+rf_data$confusion
+#Training data:
+rf<-randomForest(formula= alc_probf~sex+age+famsize+higher+Pstatus+Medu+Fedu+Mjob+Fjob+reason+guardian+traveltime+studytime+failures+schoolsup+famsup+paid+activities+nursery+internet+romantic+famrel+freetime+goout+health+absences+G1+G2+G3, data=train, ntree=200, mtry=5)
+print(rf)
+
+
+colsum<- colSums(rf$confusion)
+Accuracy<-sum(diag(rf$confusion[,-3]))/sum(rf$confusion[,-3])
+print(paste("Accuracy = ", Accuracy))
+Sensitivity<-rf$confusion[1,1]/(rf$confusion[1,1]+rf$confusion[1,2])
+Specificity<-rf$confusion[2,2]/(rf$confusion[2,1]+rf$confusion[2,2])
+print(paste("Sensitivity = ", Sensitivity))
+print(paste("Specificity = ", Specificity))
+#p1<-predict(rf, train)
+#confusionMatrix(p1, train$alc_probf)
+
+#p2<-predict(rf, test)
+#confusionMatrix(p2, test$alc_probf)
+
+importance(rf, type = 2)
+varImpPlot(rf, pch=18, cex=0.7)
+#most important feature-> goout,studytime,reason,sex.
+
+
+```

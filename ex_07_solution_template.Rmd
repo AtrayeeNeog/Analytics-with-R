@@ -1,0 +1,108 @@
+---
+title: "Excersice Sheet 7"
+fontsize: 11pt
+header-includes:
+- \usepackage[german]{babel}
+- \usepackage{caption}
+output:
+  html_document: default
+  pdf_document: default
+highlight: tango
+fig_caption: yes
+---
+
+\captionsetup[table]{labelformat=empty}
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+A broker wants to use linear regression to find out which factors have a large influence on the price of a property. For this purpose, the variables described in Table 1 are given for the last 88 sales in the broker's region.
+
+Table: Table 1 House price record
+
+Variabel   | Description
+---------  | -------------
+`price`    | house price ($\times$ 1,000 EUR)
+`bdrms`    | number bedrooms
+`lotsize`  | parking area (m$^2$)
+`sqrm`     | house area (m$^2$)
+`country`  | $==1$ when in country house style
+`lprice`   | `log(price)`
+`llotsize` | `log(lotsize)`
+`lsqrm`    | `log(sqrm)`
+
+1.  Create a linear regression model with `price` as dependent variable and `bdrms`, `lotsize`, `sqrm` und `country`  as independent variables. 
+    a) Determine the regression coefficients and  $p$-values of the dependent variable and compare their influence within the model on the predicted value for  `price`. 
+    b) Determine how much variance of the dependent variable is explained. 
+    c) Check the residuals (graphically) for normal distribution and homoskedasticity.
+    
+```{r}
+# Solution for Task 1...
+height<-read.csv("C:/Users/atray/OneDrive/Documents/R/hprice.csv")
+lmprice<- lm(price~bdrms+lotsize+sqrm+country, data = height )
+summary(lmprice)
+anova(lmprice)
+plot(height, pch=16, col="blue")
+abline(lmprice)
+
+
+hist(residuals(lmprice))
+boxplot(residuals(lmprice))
+
+#par(mfrow=c(2,2))
+plot(lmprice)
+
+```
+
+2. Given be the linear regression model from task 1.
+    a) Create a scatterplot to display the relationship between the predicted value for `price` and the residual size.
+    b) For some houses, the price forecast of the broker model is more than EUR 100,000 off. Highlight houses with a residual size of more than 100 or less than 100. What could be the reasons for high model inaccuracies?
+    c) Can the $R^2$-value be increased by using a linear transformation of one of the independent variables?
+
+```{r}
+# Solution for Task 2...
+library(dplyr)
+library(stringr)
+plot(height$price,lmprice$residuals,pch=16, col="red")
+residuals<-data.frame(residuals(lmprice))
+fitted <- data.frame(fitted(lmprice))
+data <- data.frame(fitted, residuals)
+
+
+outliers <- rbind(filter(data, data$residuals.lmprice. < -100), filter(data, data$residuals.lmprice. >100))
+plot(x=data$fitted.lmprice., y=data$residuals.lmprice.) +
+points(x=outliers$fitted.lmprice, y=outliers$residuals.lmprice, col = "red", pch=10)
+
+height$sqrtbed <- log(height$lotsize)
+
+pricebed <- lm(price ~ bdrms, height)
+plot(x=height$bdrms, y=height$price)+
+abline(pricebed, col='red')
+
+pricesqrtbed <- lm(price ~ sqrtbed, height)
+plot(x=height$sqrtbed, y=height$price)+
+abline(pricesqrtbed, col='red')
+
+coefficients(pricebed) 
+coefficients(lmprice) 
+coefficients(pricesqrtbed)
+summary(pricebed) 
+summary(lmprice)
+summary(pricesqrtbed)
+```
+
+3. Graphically display the relationship between `bdrms` and `price`. Check whether this relationship is also reflected in the regression model from Task 1. Create a regression model with `bdrms` as the only independent variable. Compare the regression coefficients with those of the model from Task 1 and interpret the differences. 
+
+```{r}
+# Solution for Task 3...
+x1<- height$bdrms
+y1<- height$price
+plot(x1, y1)
+lmbdrms<-lm(price~bdrms, data = height)
+summary(lmbdrms)
+```
